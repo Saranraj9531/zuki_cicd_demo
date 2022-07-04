@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-    - master
+    - vpncicd
 
 jobs:
   build:
@@ -25,6 +25,20 @@ jobs:
       - run: npm install -g @angular/cli > /dev/null
       - run: ng build
 
+      - name: Install OpenVPN
+        run: |
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
+      - name: Connect to VPN
+        uses: "kota65535/github-openvpn-connect-action@v1"
+        with:
+          config_file: ./.github/vpn/client.ovpn
+          username: ${{ secrets.OVPN_USERNAME }}
+          password: ${{ secrets.OVPN_PASSWORD }}
+          #client_key: ${{ secrets.OVPN_CLIENT_KEY }}
+          #tls_auth_key: ${{ secrets.OVPN_TLS_AUTH_KEY }}
+
+
       - name: copy file via ssh key
         uses: appleboy/scp-action@master
         env:
@@ -36,3 +50,11 @@ jobs:
           source: "./dist"
           target: "/var/www/html/"
           strip_components: 2  
+
+      - name: Kill VPN connection
+        if: always()
+        run: |
+          sudo killall openvpn          
+
+
+
