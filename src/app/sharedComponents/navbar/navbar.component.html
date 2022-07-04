@@ -1,0 +1,87 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<nav class="bg-gradient-to-r from-light-blue to-dark-blue">
+    <div class="w-full mx-auto px-2 sm:px-6 lg:px-8">
+        <div class="relative flex items-center justify-between h-16">
+            <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                <!-- Mobile menu button-->
+                <button (click)="toggleNavbar()" type="button" class="inline-flex items-center justify-center p-2 rounded-md  focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
+
+            Heroicon name: outline/menu
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#4a4a4a" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!--
+            Icon when menu is open.
+
+            Heroicon name: outline/x
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#4a4a4a" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+            </div>
+            <div class="flex-1 flex items-center justify-between sm:justify-between">
+                <div class="flex-shrink-0 flex items-center w-60 md:w-52">
+                    <img class="hidden md:block h-8 w-auto ml-12 md:ml-0" src="assets/images/logo.svg" alt="Workflow">
+                    <!-- <img class="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow"> -->
+                </div>
+                <div class="hidden sm:block w-full sm:ml-6">
+                    <div class="flex space-x-4 justify-end">
+                        <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                        <a href="#" class="bg-light-blue text-dark-blue px-4 py-2 rounded-full text-base font--semibold" aria-current="page">Stake</a>
+
+                        <a href="#" class="text-grey px-4 py-2 rounded-md text-base font--semibold">Claim</a>
+                    </div>
+                    <!-- <div class="flex space-x-4 justify-start ml-2">
+
+                    </div> -->
+
+                </div>
+                <div class="absolute inset-y-0 left-0 md:right-0 flex justify-around lg:justify-end w-full items-center pr-2 sm:static sm:inset-auto sm:pr-0">
+                    <a href="https://zuki.app/" target="_blank" class="text-grey  px-4 py-2 rounded-md text-base font--semibold">Home</a>
+
+                    <button *ngIf="network" type="button" class="p-1 rounded-full focus:outline-none flex items-center ml-8">
+            <!-- Heroicon name: outline/bell -->
+            <img src="assets/images/z-coin.svg" class="w-10 h-10" alt="">
+            <span class="text-white text-sm font--semibold mx-4">{{ balance / 1000000000000000000 }}</span>
+          </button>
+
+                    <!-- Profile dropdown -->
+                    <div class="ml-3 w-4/12 relative">
+
+                        <button *ngIf="!network" (click)="onConnectWallet()" type="button" class="bg-dark-blue px-6 py-2 text-white font--regular text-base w-full rounded-full" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                             Connect Wallet
+                        </button>
+                        <button *ngIf="network" type="button" class=" truncate bg-dark-blue px-6 py-2 text-white font--regular text-base w-full rounded-full" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                            {{this.network}}
+                      </button>
+                        <!-- <div>
+                        <button (click)="disConnectWallet()" type="button" class=" truncate bg-dark-blue px-6 py-2 text-white font--regular text-base w-full rounded-full" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                            Disconnect
+                        </button>
+                    </div> -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mobile menu, show/hide based on menu state. -->
+    <div class="sm:hidden" id="mobile-menu" [ngClass]="{'hidden': !showMobileMenu, 'block': showMobileMenu}">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            <a href="#" class="bg-light-blue text-dark-blue px-4 py-2 block rounded-md text-base font--semibold " aria-current="page">Stake</a>
+
+            <a href="#" class="text-grey hover:bg-light-blue block px-3 py-2 rounded-md text-base font-medium">Claim</a>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <script src="https://cdn.widget.xanpool.com/xanpool-sdk-v1.js"></script>
+    <script>
+        function onWidgetEvent(message) {
+            console.log('Received message ' + message.type);
+            console.log('Message payload: ' + message.payload);
+        }
+
+        function onLoad() {
+            const options = {
+                apiKey: '4bc38efce0d63fd73fd56d1b4cd12205'
+            };
+            const widget = new XanPoolWidget(
+                options, document.getElementById("widgetContainer"), onWidgetEvent
+            );
+            widget.init();
+
+        }
+    </script>
+    <style type="text/css">
+        .widgetContainer {
+            width: 600px;
+        }
+    </style>
+</head>
+
+<body onload="onLoad()">
+    <div id="widgetContainer" class="widgetContainer" />
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+/* Toggle B */
+input:checked ~ .dot {
+    transform: translateX(100%);
+    background-color: #48bb78;
+  }
+  .bt-spinner {
+    border-radius: 50%;
+    background-color: transparent;
+    border: 4px solid transparent;
+    border-top-color: #035aa6;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

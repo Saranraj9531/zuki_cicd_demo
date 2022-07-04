@@ -1,0 +1,223 @@
+<div class="stake__tabs--content px-8 md:px-0" id="tabs-tabContent3">
+    <div class="tab-pane fade show active" *ngIf="showLiveData && poolItemLive" id="tabs-home3" role="tabpanel" aria-labelledby="tabs-home-tab3">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12">
+                <div class="bg-light-blue overflow-x-auto rounded-md">
+                    <div class="grid grid-cols-12 gap-x-4 lg:gap-6 border-blue border-b">
+                        <div class="col-span-12 lg:col-span-8">
+                            <table class="w-full md:h-24 text-sm 2xl:text-small text-left">
+                                <tbody>
+                                    <tr class="">
+                                        <th scope="row" class="w-4/12 px-4 md:px-6 py-2 md:py-4">
+                                            <p class="font--semibold text-dark-blue text-base md:text-lg">Pool {{poolItemLive?.poolInfo?.duration / 43800 | number : '1.0-0'}} Month</p>
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm"></p>
+                                        </th>
+                                        <td class="px-4 md:px-6 py-2 md:py-4 hidden md:table-cell">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Reward</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{ isStaking ? (userInfo?.expectedReward | unitConversion) : '-'}} </p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4 hidden md:table-cell">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Deposit Amount</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{isStaking ? (userInfo?.amount | unitConversion): '-'}}</p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4 hidden md:table-cell">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Expiry Date</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{isStaking ? stakingEndTime:'-'}}</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-span-12 lg:col-span-4">
+                            <table class="w-full md:h-24 text-sm 2xl:text-small text-left">
+                                <tbody>
+                                    <tr class="rounded-xl">
+                                        <td class="px-4 md:px-6 py-2 md:py-4">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Participant reward</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{ PR[index] }}%</p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">APR</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{ APR[index] }}%</p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm flex items-center">
+                                                Lockup Period
+                                                <img src="assets/images/question.svg" class="w-3 h-3 md:w-4 md:h-4 ml-2" alt="" />
+                                            </p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{poolItemLive?.poolInfo?.duration / 43800 | number : '1.0-0'}} Months</p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4">
+                                            <button (click)="togglePoolInfo()">
+                                                <img src="assets/images/down-arrow.svg" class="w-3 h-3 md:w-4 md:h-4" alt="" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-span-12" [ngClass]="{'hidden': !showPoolInfo, 'block': showPoolInfo}">
+                            <div class="bg-sky-blue rounded-xl mx-4 md:mx-6 mb-6 p-4 md:p-6">
+                                <div class="grid grid-cols-12 items-center gap-4 lg:gap-12">
+                                    <div class="col-span-12 lg:col-span-4">
+                                        <div class="md:flex justify-between items-centerpb-2">
+                                            <p class="lg:w-5/12 font--regular text-dark-blue text-xs md:text-sm">Total Pool Amount</p>
+                                            <p class="lg:w-7/12 font--semibold text-dark-blue text-sm md:text-base lg:text-right">{{poolItemLive?.poolInfo?.poolStakableAmount | unitConversion}} ZUKI</p>
+                                        </div>
+                                        <div class="flex justify-between items-center space-x-4">
+                                            <div class="w-10/12 bg-progress-blue rounded-full h-2.5 dark:bg-gray-700">
+                                                <div class="bg-dark-blue h-2.5 rounded-full" [ngStyle]="{width: ((getToFixed(userInfo?.amount/poolItemLive?.poolInfo?.poolStakableAmount))*100)+'%'}"></div>
+                                            </div>
+                                            <p #percent class="w-2/12 font--regular text-dark-blue text-xs md:text-sm">{{((getToFixed(userInfo?.amount/poolItemLive?.poolInfo?.poolStakableAmount))*100)}} %</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-12 lg:col-span-5">
+                                        <div class="flex flex-col justify-start items-start md:flex md:justify-around md:items-center gap-y-4">
+                                            <div>
+                                                <p class="font--regular text-dark-blue text-xs md:text-sm">Pool Entry Start Date</p>
+                                                <p class="font--semibold text-dark-blue text-sm md:text-base">{{startDate}}</p>
+                                            </div>
+                                            <div>
+                                                <p class="font--regular text-dark-blue text-xs md:text-sm">Pool Entry End Date</p>
+                                                <p class="font--semibold text-dark-blue text-sm md:text-base">{{endDate}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-12 lg:col-span-3">
+                                        <button *ngIf="showStakeButton" (click)="openStakeModal()" type="button" class="bg-transparent-blue px-6 py-2 md:float-right text-dark-blue font--semibold text-sm 2xl:text-base rounded-full">
+                                            Stake
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade show active" *ngIf="!showLiveData && poolItemCompleted" id="tabs-home3" role="tabpanel" aria-labelledby="tabs-home-tab3">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12">
+                <div class="bg-light-blue overflow-x-auto rounded-md">
+                    <div class="grid grid-cols-12 gap-x-4 lg:gap-6 border-blue border-b">
+                        <div class="col-span-12 lg:col-span-8">
+                            <table class="w-full md:h-24 text-sm 2xl:text-small text-left">
+                                <tbody>
+                                    <tr class="rounded-xl">
+                                        <th scope="row" class="w-4/12 px-4 md:px-6 py-2 md:py-4">
+                                            <p class="font--semibold text-dark-blue text-base md:text-lg">Pool {{poolItemCompleted?.poolInfo?.duration}} Month</p>
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm"></p>
+                                        </th>
+                                        <td class="px-4 md:px-6 py-2 md:py-4 hidden md:table-cell">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Reward</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{ isStaking ? (userInfo?.expectedReward | unitConversion) : '-'}} </p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4 hidden md:table-cell">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Deposit Amount</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{isStaking ? (userInfo?.amount | unitConversion): '-'}}</p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4 hidden md:table-cell">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Expiry Date</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{isStaking ? stakingEndTime:'-'}}</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-span-12 lg:col-span-4">
+                            <table class="w-full md:h-24 text-sm 2xl:text-small text-left">
+                                <tbody>
+                                    <tr class="rounded-xl">
+                                        <td class="px-4 md:px-6 py-2 md:py-4">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm">Reward Rate</p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{poolItemCompleted?.poolInfo?.rewardRate}}%</p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4">
+                                            <p class="font--regular text-dark-blue text-xs md:text-sm flex items-center">
+                                                Lockup Period
+                                                <img src="assets/images/question.svg" class="w-3 h-3 md:w-4 md:h-4 ml-2" alt="" />
+                                            </p>
+                                            <p class="font--semibold text-dark-blue text-sm md:text-base">{{lockUpPeriod}}</p>
+                                        </td>
+                                        <td class="px-4 md:px-6 py-2 md:py-4">
+                                            <button (click)="togglePoolInfo()">
+                                                <img src="assets/images/down-arrow.svg" class="w-3 h-3 md:w-4 md:h-4" alt="" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-span-12" [ngClass]="{'hidden': !showPoolInfo, 'block': showPoolInfo}">
+                            <div class="bg-sky-blue rounded-xl mx-4 md:mx-6 mb-6 p-4 md:p-6">
+                                <div class="grid grid-cols-12 items-center gap-4 lg:gap-12">
+                                    <div class="col-span-12 lg:col-span-4">
+                                        <div class="md:flex justify-between items-center pb-2">
+                                            <p class="lg:w-5/12 font--regular text-dark-blue text-xs md:text-sm">Total Pool Amount</p>
+                                            <p class="lg:w-7/12 font--semibold text-dark-blue text-sm md:text-base lg:text-right">{{poolItemCompleted?.poolInfo?.poolStakableAmount | unitConversion}} ZUKI</p>
+                                        </div>
+                                        <div class="flex justify-between items-center space-x-4">
+                                            <div class="w-10/12 bg-progress-blue rounded-full h-2.5">
+                                                <div class="w-2/12 bg-dark-blue h-2.5 rounded-full" [ngStyle]="{width: ((getToFixed(userInfo?.amount/poolItemCompleted?.poolInfo?.poolStakableAmount))*100)+'%'}"></div>
+                                            </div>
+                                            <p #percent class="font--regular text-dark-blue text-xs md:text-sm">{{((getToFixed(userInfo?.amount/poolItemCompleted?.poolInfo?.poolStakableAmount))*100)}} %</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-12 lg:col-span-5">
+                                        <div class="flex flex-col justify-start items-start md:flex md:justify-around md:items-center gap-y-4">
+                                            <div>
+                                                <p class="font--regular text-dark-blue text-xs md:text-sm">Pool Entry Start Date</p>
+                                                <p class="font--semibold text-dark-blue text-sm md:text-base">{{startDate}}</p>
+                                            </div>
+                                            <div>
+                                                <p class="font--regular text-dark-blue text-xs md:text-sm">Pool Entry End Date</p>
+                                                <p class="font--semibold text-dark-blue text-sm md:text-base">{{endDate}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="isStaking && !endOfStakeTime" class="col-span-12 lg:col-span-3">
+                                        <button type="button" class="bg-transparent-blue px-6 py-2 md:float-right text-dark-blue font--semibold text-sm 2xl:text-base rounded-full">
+                                            Claim at {{isStaking ? stakingEndTime:'-'}}
+                                        </button>
+                                    </div>
+                                    <div *ngIf="endOfStakeTime" class="col-span-12 lg:col-span-3">
+                                        <button (click)="claimToken()" type="button" class="bg-transparent-blue px-6 py-2 md:float-right text-dark-blue font--semibold text-sm 2xl:text-base rounded-full">
+                                            Claim
+                                        </button>
+                                    </div>
+                                    <!-- <div class="col-span-12 lg:col-span-3">
+                                        <button type="button" class="bg-transparent-blue px-6 py-2 md:float-right text-dark-blue font--semibold text-sm 2xl:text-base rounded-full">
+                                            Connect to a Wallet
+                                        </button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Waiting for Confirmation START -->
+<div class="fixed z-10 inset-0 overflow-y-auto" [ngClass]="this.isConfirmationShown === true ? 'block' : 'hidden'" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center lg:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-transparent-blue bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <!-- This element is to trick the browser into centering the modal contents. -->
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <div class="relative inline-block align-bottom p-8 bg-pale-blue rounded-xl text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full">
+            <h2 class="font--bold text-dark-blue text-base lg:text-lg 2xl:text-normal">Waiting for confirmation</h2>
+            <hr class="border-blue border-b border-solid my-4" />
+            <div class="w-full flex justify-center my-8">
+                <div class="bt-spinner animate-spin h-32 w-32"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Waiting for Confirmation END -->

@@ -1,0 +1,229 @@
+<app-navbar (connectedNetworkId)="getNetworkAddress($event) " (connectedChainId)="getChainId($event) " [balance]="balance"></app-navbar>
+<header class="bg-gradient-to-r from-light-blue to-dark-blue">
+    <div class="max-w-7xl mx-auto py-12 pb-24 h-screen overflow-y-scroll">
+        <div class="md:flex justify-between px-8 md:px-0 mb-4">
+            <div class="stake__tabs--nav">
+                <div class="bg-light-blue inline-block rounded-full">
+                    <ul class="stake__tabs flex list-none pl-0" role="tablist">
+                        <li class="stake__tab--trigger cursor-pointer w-full block font--regular text-sm 2xl:text-small leading-tight uppercase  px-6 py-2 capitalize " role="presentation" [ngClass]="viewMode == 'tab1' ? 'bg-dark-blue px-6 py-2 rounded-full text-light-blue capitalize':''"
+                            rel="tab1" (click)="onToggle('tab1')">
+
+                            Live
+                        </li>
+                        <li class="stake__tab--trigger cursor-pointer w-full block font--regular text-sm 2xl:text-small leading-tight uppercase  px-6 py-2 capitalize" role="presentation" [ngClass]="viewMode == 'tab2' ? 'bg-dark-blue px-6 py-2 rounded-full text-light-blue capitalize':''"
+                            rel="tab2" (click)="onToggle('tab2')">
+
+                            Completed
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex justify-between mt-2">
+
+                <!-- <div class="my-4 md:my-0">
+                    <input type="text" class="form-control block w-full px-4 py-2 text-xs md:text-sm 2xl:text-small font--regular text-gray-700 bg-light-blue bg-clip-padding rounded-full transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        id="exampleFormControlInput1" placeholder="Search pool names" />
+                </div> -->
+            </div>
+        </div>
+        <ng-container *ngIf="showLive">
+            <app-pool-card *ngFor="let item of poolDataLive;let i = index" (openModal)="$event ==true ? openContractModal(item['index']): ''" (sendModalData)="incomingModalData($event)" (sendLockPeriod)="incomingLockupPeriod($event)" [showLiveData]="showLive" [poolItemLive]="item"
+                [contract]="this.contract" [index]="item.index" [showPoolInfo]="showPoolInfo" [userPublicAddress]="publicAddress" [showStakeButton]="showStakeButton"></app-pool-card>
+        </ng-container>
+        <ng-container *ngIf="!showLive">
+            <app-pool-card *ngFor="let item of poolDataCompleted;let i = index" [index]="item.index" [showLiveData]=" showLive " [poolItemCompleted]="item " [showPoolInfo]="showPoolInfo "></app-pool-card>
+        </ng-container>
+
+        <!-- <button type="button " (click)="openContractModal() " class="bg-dark-blue w-full opacity-50 px-6 py-2 text-white font--semibold text-sm 2xl:text-base rounded-full ">
+            Approve Contract Modal Show
+        </button> -->
+        <!-- STAKE MODAL START -->
+        <div class="fixed z-10 inset-0 overflow-y-auto " [ngClass]="this.isApproveContractShown===true ? 'block' : 'hidden' " aria-labelledby="modal-title " role="dialog " aria-modal="true ">
+            <div class="flex items-center lg:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 ">
+                <div class="fixed inset-0 bg-transparent-blue bg-opacity-75 transition-opacity " aria-hidden="true "></div>
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen " aria-hidden="true ">&#8203;</span>
+
+                <!-- Stake Modal start -->
+                <div class="relative inline-block align-bottom bg-pale-blue rounded-xl text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full ">
+                    <div class="p-6 ">
+                        <div class="flex justify-between items-center ">
+                            <div class="flex justify-between items-center ">
+                                <h2 class="font--bold text-dark-blue uppercase text-base lg:text-lg 2xl:text-normal ">Stake</h2>
+                            </div>
+                            <div (click)="closeContractModal() ">
+                                <img src="assets/images/close.svg " class="w-8 h-8 " alt="reflex-finance " />
+                            </div>
+                        </div>
+                        <hr class="border-blue border-b-2 border-solid my-4 " />
+                        <div class="space-y-4 ">
+                            <div class="md:flex items-center justify-between ">
+                                <p class="font--regular text-dark-blue text-sm 2xl:text-normal ">Pool Name</p>
+                                <p class="font--semibold text-dark-blue text-sm 2xl:text-normal ">Pool {{this.stakingData?.poolInfo.duration}} Month</p>
+                            </div>
+                            <div class="md:flex items-center justify-between ">
+                                <p class="font--regular text-dark-blue text-sm 2xl:text-normal ">Token</p>
+                                <p class="font--semibold text-dark-blue text-sm 2xl:text-normal ">ZUKI</p>
+                            </div>
+                            <div class="md:flex items-center justify-between ">
+                                <p class="font--regular text-dark-blue text-sm 2xl:text-normal ">APR</p>
+                                <p class="font--semibold text-dark-blue text-sm 2xl:text-normal ">{{this.stakingData?.poolInfo.rewardRate}}%</p>
+                            </div>
+                            <div class="md:flex items-center justify-between ">
+                                <p class="font--regular text-dark-blue text-sm 2xl:text-normal ">Lock-up Period</p>
+                                <p class="font--semibold text-dark-blue text-sm 2xl:text-normal ">{{stakingLockupPeriod}} Days</p>
+                            </div>
+                            <div class="md:flex items-center justify-between ">
+                                <p class="font--regular text-dark-blue text-sm 2xl:text-normal ">Max Stake</p>
+                                <p class="font--semibold text-dark-blue text-sm 2xl:text-normal ">{{this.stakingData?.poolInfo.poolStakableAmount | unitConversion}} ZUKI</p>
+                            </div>
+                            <div class="md:flex items-center justify-between ">
+                                <p class="font--regular text-dark-blue text-sm 2xl:text-normal ">Current Stake</p>
+                                <p class="font--semibold text-dark-blue text-sm 2xl:text-normal ">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="zuki-field bg-sky-blue p-6 ">
+                        <div class="flex justify-between items-center mb-3 ">
+                            <div class="text-white flex align-items-center w-4/12">
+                                <img src="assets/images/z-coin.svg " width="24 " height="24 " alt=" " />
+                                <span class="pl-2 uppercase text-dark-blue font--semibold text-base "> Zuki </span>
+                            </div>
+                            <p class="text-label-blue font--regular mb-0 text-base font--regular w-8/12 flex">
+                                Balance
+                                <span class="pl-2 text-dark-blue font--semibold truncate">{{balance / 1000000000000000000}} </span>
+                            </p>
+                        </div>
+                        <div class="flex p-4 text-sm md:text-base 2xl:text-lg bg-input-blue rounded-xl w-full mb-5 ">
+                            <input type="number" [(ngModel)]="quantity" class="font-semibold w-full text-dark-blue bg-input-blue focus:outline-none " #f placeholder="0.0 " (keyup)="calculateAllowance(f) " />
+                            <span (click)="setMax()" class="pointer inline-flex border-1 text-label-blue rounded-full bg-sky-blue items-center px-3 text-sm ">
+                                    Max
+                                </span>
+                        </div>
+                        <div class="md:flex items-center justify-between ">
+                            <p class="font--regular text-label-blue text-base md:text-sm 2xl:text-normal ">Estimated Reward</p>
+                            <p class="font--semibold text-dark-blue text-xs md:text-sm 2xl:text-normal ">{{this.stakingData?.poolInfo.rewardRate}}</p>
+                        </div>
+                    </div>
+                    <div class="p-6 mx-auto ">
+                        <button type="button " (click)="openConfirmation() " class="bg-dark-blue w-full opacity-50 px-6 py-2 text-white font--semibold text-sm 2xl:text-base rounded-full ">
+                             {{buttonText ? buttonText : 'Buy Stake' }} 
+                            </button>
+
+                    </div>
+
+
+                </div>
+                <!-- stake modal end -->
+            </div>
+        </div>
+        <!-- STAKE MODAL END -->
+
+
+        <!-- Waiting for Confirmation START -->
+        <div class="fixed z-10 inset-0 overflow-y-auto " [ngClass]="this.isConfirmationShown===true ? 'block' : 'hidden' " aria-labelledby="modal-title " role="dialog " aria-modal="true ">
+            <div class="flex items-center lg:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 ">
+                <div class="fixed inset-0 bg-transparent-blue bg-opacity-75 transition-opacity " aria-hidden="true "></div>
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen " aria-hidden="true ">&#8203;</span>
+
+                <div class="relative inline-block align-bottom p-8 bg-pale-blue rounded-xl text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full ">
+                    <h2 class="font--bold text-dark-blue text-base lg:text-lg 2xl:text-normal ">Waiting for confirmation</h2>
+                    <hr class="border-blue border-b border-solid my-4 " />
+                    <div class="w-full flex justify-center my-8 ">
+                        <div class="bt-spinner animate-spin h-32 w-32 "></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Waiting for Confirmation END -->
+
+        <!-- Upload START -->
+        <div class="fixed z-10 inset-0 overflow-y-auto " [ngClass]="this.isUploadShown===true ? 'block' : 'hidden' " aria-labelledby="modal-title " role="dialog " aria-modal="true ">
+            <div class="flex items-center lg:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 ">
+                <div class="fixed inset-0 bg-transparent-blue bg-opacity-75 transition-opacity " aria-hidden="true "></div>
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen " aria-hidden="true ">&#8203;</span>
+
+                <div class="relative inline-block align-bottom p-8 bg-pale-blue rounded-xl text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full ">
+
+                    <div class="flex justify-between items-center ">
+                        <div class="flex justify-between items-center ">
+                            <h2 class="font--bold text-dark-blue uppercase text-base lg:text-lg 2xl:text-normal ">Stake Completed Successfully</h2>
+                        </div>
+                        <div (click)="closeConfirmation() ">
+                            <img src="assets/images/close.svg " class="w-8 h-8 " alt="reflex-finance " />
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center my-8 ">
+
+                        <img src="assets/images/upload.svg " class="h-32 w-32 " alt=" ">
+                    </div>
+                    <p class="text-sm font--semibold justify-center items-center text-label-blue flex "><a href="https://etherscan.io/tx/{{txHash}}" target="_blank">View on Etherscan</a><img src="assets/images/link-icon.svg " class="w-3 h-3 ml-2 2xl:w-4 2xl:h-4 " alt=" "></p>
+                </div>
+            </div>
+        </div>
+        <!-- Upload END -->
+        <!-- Change Network Modal Start -->
+        <div class="fixed z-10 inset-0 overflow-y-auto " [ngClass]="changeNetworkModalShown ? 'block' : 'hidden' " aria-labelledby="modal-title " role="dialog " aria-modal="true ">
+            <div class="flex items-center lg:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 ">
+                <div class="fixed inset-0 bg-transparent-blue bg-opacity-75 transition-opacity " aria-hidden="true "></div>
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen " aria-hidden="true ">&#8203;</span>
+
+                <div class="relative inline-block align-bottom p-8 bg-pale-blue rounded-xl text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full ">
+
+                    <div class="flex justify-between items-center ">
+                        <div class="flex justify-between items-center ">
+                            <h2 class="font--bold text-dark-blue uppercase text-base lg:text-lg 2xl:text-normal ">Change Network to Ethereum Mainnet</h2>
+                        </div>
+                        <div (click)="this.changeNetworkModalShown=false ">
+                            <img src="assets/images/close.svg " class="w-8 h-8 " alt="reflex-finance " />
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center my-8 ">
+
+                        <!-- <img src="assets/images/upload.svg " class="h-32 w-32 " alt=" "> -->
+                    </div>
+                    <p class="text-sm font--semibold justify-center items-center text-label-blue flex mb-12 ">You are not connected to Ethereum Mainnet.Switch to Ethereum Mainnet</p>
+                    <button type="button " (click)="changeNetwork() " class="bg-dark-blue w-full opacity-50 px-6 py-2 text-white font--semibold text-sm 2xl:text-base rounded-full ">
+                       Change
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Change Network Modal End
+         -->
+        <!-- Connect wallet Modal Start -->
+        <div class="fixed z-10 inset-0 overflow-y-auto " [ngClass]="showConnectWalletModal ? 'block' : 'hidden' " aria-labelledby="modal-title " role="dialog " aria-modal="true ">
+            <div class="flex items-center lg:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 ">
+                <div class="fixed inset-0 bg-transparent-blue bg-opacity-75 transition-opacity " aria-hidden="true "></div>
+                <!-- This element is to trick the browser into centering the modal contents. -->
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen " aria-hidden="true ">&#8203;</span>
+
+                <div class="relative inline-block align-bottom p-8 bg-pale-blue rounded-xl text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full w-full ">
+
+                    <!-- <div class="flex justify-between items-center "> -->
+                    <div>
+                        <p class="font--bold text-center text-dark-blue uppercase text-base lg:text-lg 2xl:text-normal ">Please connect your wallet containing ZUKI tokens to this staking platform.
+                        </p>
+                    </div>
+                    <!-- <div (click)="this.showConnectWalletModal=false ">
+                            <img src="assets/images/close.svg " class="w-8 h-8 " alt="reflex-finance " />
+                        </div> -->
+                    <!-- </div> -->
+                    <div class="w-full flex justify-center my-4 ">
+
+                        <!-- <img src="assets/images/upload.svg " class="h-32 w-32 " alt=" "> -->
+                    </div>
+                    <button type="button " (click)="closeConnectModal() " class="bg-dark-blue w-full opacity-50 px-6 py-2 text-white font--semibold text-sm 2xl:text-base rounded-full ">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Connect wallet Popup End
+         -->
+    </div>
+</header>

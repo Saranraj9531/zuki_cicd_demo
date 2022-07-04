@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="203" height="203" viewBox="0 0 203 203">
+    <g data-name="Group 2887">
+        <g data-name="Ellipse 237" style="stroke:#035aa6;stroke-width:5px;fill:none">
+            <circle cx="101.5" cy="101.5" r="101.5" style="stroke:none"/>
+            <circle cx="101.5" cy="101.5" r="99" style="fill:none"/>
+        </g>
+        <g data-name="Icon feather-upload">
+            <path data-name="Path 1868" d="M89.861 22.5v18.969a9.485 9.485 0 0 1-9.485 9.485H13.985A9.485 9.485 0 0 1 4.5 41.469V22.5" transform="translate(54.79 93.698)" style="stroke-linecap:round;stroke-linejoin:round;stroke:#035aa6;stroke-width:5px;fill:none"/>
+            <path data-name="Path 1869" d="M57.923 28.211 34.211 4.5 10.5 28.211" transform="translate(67.759 54.79)" style="stroke-linecap:round;stroke-linejoin:round;stroke:#035aa6;stroke-width:5px;fill:none"/>
+            <path data-name="Path 1870" d="M18 4.5v56.908" transform="translate(83.971 54.79)" style="stroke-linecap:round;stroke-linejoin:round;stroke:#035aa6;stroke-width:5px;fill:none"/>
+        </g>
+    </g>
+</svg>
