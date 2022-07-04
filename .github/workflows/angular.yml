@@ -54,7 +54,13 @@ jobs:
       - name: Kill VPN connection
         if: always()
         run: |
-          sudo killall openvpn          
+          sudo killall openvpn   
+      - name: Upload VPN logs
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: VPN logs
+          path: /var/www/html/vpn.log
 
 
 
